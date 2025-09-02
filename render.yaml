@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: sweep-dema-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+  - type: worker
+    name: sweep-dema-telegram-bot
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python tg_bot.py
+    autoDeploy: true
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false   # Render Dashboard'da değerini gir
+      - key: POLL_INTERVAL_SECONDS
+        value: "60"
